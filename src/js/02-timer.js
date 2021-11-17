@@ -14,10 +14,6 @@ const refs = {
 const date = new Date();
 refs.btn.disabled = true;
 
-let convertDate;
-let selectedDates;
-let timeToStart;
-
 flatpickr('#datetime-picker', {
   enableTime: true,
   time_24hr: true,
@@ -25,12 +21,10 @@ flatpickr('#datetime-picker', {
   minuteIncrement: 1,
   onClose(selectedDates) {
     if (selectedDates[0] - date < 0) {
-      alert('Please choose a date in the future');
-    } else {
-      refs.btn.disabled = false;
+      return alert('Please choose a date in the future');
     }
-    timeToStart = selectedDates[0] - date;
-    console.log(timeToStart);
+    refs.btn.disabled = false;
+    handleBtnClick(selectedDates[0].getTime());
   },
 });
 
@@ -38,20 +32,16 @@ const padNum = num => {
   return num.toString().padStart(2, 0);
 };
 
-const handleBtnClick = () => {
+const handleBtnClick = selectedDates => {
   let timerId = setInterval(() => {
-    // timeToStart = selectedDates[0] - date;
-    convertDate = convertMs(timeToStart);
-
+    const timeToStart = selectedDates - Date.now();
+    const convertDate = convertMs(timeToStart);
     if (timeToStart > 0) {
       refs.days.textContent = convertDate.days;
       refs.hours.textContent = padNum(convertDate.hours);
       refs.minutes.textContent = padNum(convertDate.minutes);
       refs.seconds.textContent = padNum(convertDate.seconds);
     } else clearInterval(timerId);
-
-    // console.log(convertDate);
-    // console.log(timeToStart);
   }, 1000);
 };
 refs.btn.addEventListener('click', handleBtnClick);
