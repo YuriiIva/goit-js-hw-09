@@ -3,11 +3,20 @@ import 'flatpickr/dist/flatpickr.min.css';
 import { convertMs } from './02-counting-values-date';
 
 const refs = {
-  btn: document.querySelector('button[button]'),
+  btn: document.querySelector('button[data-start]'),
   input: document.querySelector('#datetime-picker'),
-  timer: document.querySelector('.timer'),
+  days: document.querySelector('span[data-days]'),
+  hours: document.querySelector('span[data-hours]'),
+  minutes: document.querySelector('span[data-minutes]'),
+  seconds: document.querySelector('span[data-seconds]'),
 };
+
 const date = new Date();
+refs.btn.disabled = true;
+
+let convertDate;
+let selectedDates;
+let timeToStart;
 
 flatpickr('#datetime-picker', {
   enableTime: true,
@@ -16,15 +25,33 @@ flatpickr('#datetime-picker', {
   minuteIncrement: 1,
   onClose(selectedDates) {
     if (selectedDates[0] - date < 0) {
-      // refs.btn.disabled = true;
       alert('Please choose a date in the future');
+    } else {
+      refs.btn.disabled = false;
     }
-    const timeToStart = selectedDates[0] - date;
-    const convertDate = convertMs(timeToStart);
-    // refs.timer.dataset.days.textContent = convertDate.days;
-
-    console.log(refs.timer.elements.dataset.days);
+    timeToStart = selectedDates[0] - date;
     console.log(timeToStart);
-    console.log(convertDate);
   },
 });
+
+const padNum = num => {
+  return num.toString().padStart(2, 0);
+};
+
+const handleBtnClick = () => {
+  let timerId = setInterval(() => {
+    // timeToStart = selectedDates[0] - date;
+    convertDate = convertMs(timeToStart);
+
+    if (timeToStart > 0) {
+      refs.days.textContent = convertDate.days;
+      refs.hours.textContent = padNum(convertDate.hours);
+      refs.minutes.textContent = padNum(convertDate.minutes);
+      refs.seconds.textContent = padNum(convertDate.seconds);
+    } else clearInterval(timerId);
+
+    // console.log(convertDate);
+    // console.log(timeToStart);
+  }, 1000);
+};
+refs.btn.addEventListener('click', handleBtnClick);
