@@ -1,3 +1,5 @@
+import notiflix from 'notiflix';
+
 const refs = {
   inputDelay: document.querySelector('input[name="delay"]'),
   inputStep: document.querySelector('input[name="step"]'),
