@@ -10,6 +10,7 @@ const refs = {
 
 const handleBtnSubmit = e => {
   e.preventDefault();
+
   const amount = +refs.inputAmount.value;
   const delay = +refs.inputDelay.value;
   const baseStep = +refs.inputStep.value;
